@@ -1,0 +1,14 @@
+**/Makefile
+*.log
+*.jou
+*.str
+*.xpr
+**/export/
+export.zip
+**/.Xil/
+hls.app
+kernel.xml
+**/solution1/
+
+Vivado/rx_demo/receiver/*/
+Vivado/tx_demo/transmitter/*/
