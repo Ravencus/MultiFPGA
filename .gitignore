@@ -12,3 +12,6 @@ kernel.xml
 
 Vivado/rx_demo/receiver/*/
 Vivado/tx_demo/transmitter/*/
+Vivado/tx_dma/*/
+Vivado/rx_dma/*/
+Vivado/txrx/*/
