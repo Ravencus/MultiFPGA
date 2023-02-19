@@ -2,7 +2,9 @@
 *.log
 *.jou
 *.str
+*.out
 *.xpr
+*.vscode/
 **/export/
 export.zip
 **/.Xil/

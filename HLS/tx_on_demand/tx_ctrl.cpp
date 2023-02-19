@@ -2,8 +2,8 @@
  * @Author: Zihan(Ravencus) Zheng
  * @Date: 2023-02-17 00:55:17
  * @LastEditors: Ravencus ravencus@gmail.com
- * @LastEditTime: 2023-02-19 14:07:16
- * @FilePath: /HLS/tx_on_demand/tx_ctrl.cpp
+ * @LastEditTime: 2023-02-19 14:51:47
+ * @FilePath: /MultiFPGA/HLS/tx_on_demand/tx_ctrl.cpp
  * @Description:
  *
  */
@@ -51,6 +51,12 @@ void tx_ctrl(bool write[2], hls::stream<ap_axis<32, 2, 5, 6>> &out)
 
         if (write_0 == 0 && write_1 == 0)
         {
+            // send data with user = 3 to terminate
+            ap_axis<32, 2, 5, 6> tmp;
+            tmp.data = 0;
+            tmp.user = 3;
+            out.write(tmp);
+
             break;
         }
         else if (write_0 == 0 || write_1 == 0)
