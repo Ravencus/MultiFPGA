@@ -2,7 +2,7 @@ open_project -reset tx_on_demand
 
 add_files tx_ctrl.cpp
 
-add_files -tb tx_ctrl_tb.cpp
+# add_files -tb tx_ctrl_tb.cpp
 set_top tx_ctrl
 
 # ############################
@@ -13,7 +13,7 @@ set_part xczu9eg-ffvb1156-2-e
 
 create_clock -period "200MHz"
 
-csim_design
+# csim_design
 
 csynth_design
 
