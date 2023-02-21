@@ -2,7 +2,7 @@
  * @Author: Zihan(Ravencus) Zheng
  * @Date: 2023-02-19 14:19:06
  * @LastEditors: Ravencus ravencus@gmail.com
- * @LastEditTime: 2023-02-19 22:32:00
+ * @LastEditTime: 2023-02-20 22:46:16
  * @FilePath: /MultiFPGA/HLS/rx_on_demand/rx_ctrl.cpp
  * @Description:
  *
@@ -14,9 +14,9 @@ void rx_ctrl(hls::stream<ap_axis<32, 2, 5, 6>> &in, ap_int<32> store_DRAM[1000])
 {
 #pragma HLS INTERFACE axis port = in
 #pragma HLS INTERFACE m_axi port = store_DRAM offset=slave bundle = gmem
+
 #pragma HLS INTERFACE s_axilite port = store_DRAM bundle = control
 #pragma HLS INTERFACE s_axilite port = in bundle = control
-
 #pragma HLS INTERFACE s_axilite port = return bundle = control
 
 
@@ -31,6 +31,8 @@ void rx_ctrl(hls::stream<ap_axis<32, 2, 5, 6>> &in, ap_int<32> store_DRAM[1000])
         data[i] = 0;
     }
 
+    ap_int<32> head_count = 0;
+
     READ:
     while (true)
     {
@@ -41,8 +43,17 @@ void rx_ctrl(hls::stream<ap_axis<32, 2, 5, 6>> &in, ap_int<32> store_DRAM[1000])
         else
         {
             tmp = in.read();
-            data[rx_count] = tmp.data;
-            rx_count++;
+            if (tmp.data == 7777)
+            {
+                head_count++;
+                continue;
+            }
+            if(head_count == 4)
+            {
+                data[rx_count] = tmp.data;
+                rx_count++;
+            }
+            
         }
         if(rx_count == 1000)
         {
@@ -55,22 +66,10 @@ void rx_ctrl(hls::stream<ap_axis<32, 2, 5, 6>> &in, ap_int<32> store_DRAM[1000])
         WB1:
         for (; i < 1000;)
         {
-            store_DRAM[i] = 0;
+            store_DRAM[i] = data[i];
             i++;
 
         }
-        rx_count = 1001;
-    }
-    i=0;
-    if (rx_count == 1001){
-        // write back
-        WB2:
-        for (; i < 1000;)
-        {
-            store_DRAM[i] = 1;
-            i++;
-        }
-        rx_count = 1002;
     }
 
     return;
