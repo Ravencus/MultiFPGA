@@ -31,6 +31,7 @@ float conv_layer_golden_output_feature_map[64][368][640];
 fm_t  fixp_conv_layer_input_feature_map[3][736][1280];
 wt_t  fixp_conv_layer_weights[64][3][7][7];
 wt_t  fixp_conv_layer_bias[64];
+hls::stream <ap_axis<16,1,1,1>> &board_output_feature_map;
 fm_t  fixp_conv_layer_output_feature_map[64][368][640] = {0};
 
 //--------------------------------------------------------------------------
@@ -91,9 +92,23 @@ int main ()
     tiled_conv (fixp_conv_layer_input_feature_map,
                 fixp_conv_layer_weights,
                 fixp_conv_layer_bias,
-                fixp_conv_layer_output_feature_map
+                board_output_feature_map
     );
     
+    ap_axis<16, 1, 1, 1> tmp;
+    for(int f = 0; f < 64; f++)
+    {
+        for(int i = 0; i < 368; i++)
+        {
+            for(int j = 0; j < 640; j++)
+            {
+                tmp = board_output_feature_map.read();
+                fixp_conv_layer_output_feature_map[f][i][j] = tmp.data;
+            }
+        }
+    }
+
+
     std::cout << "Tiled-convolution simulation complete!\n" << std::endl;
     
     //Compute Mean-Squared-Error

@@ -82,7 +82,7 @@ void tiled_conv (
     fm_t input_feature_map[IN_FM_DEPTH][IN_FM_HEIGHT][IN_FM_WIDTH],
     wt_t layer_weights[OUT_FM_DEPTH][IN_FM_DEPTH][KERNEL_HEIGHT][KERNEL_WIDTH],
     wt_t layer_bias[OUT_FM_DEPTH],
-    fm_t output_feature_map[OUT_FM_DEPTH][OUT_FM_HEIGHT][OUT_FM_WIDTH]
+    hls::stream <ap_axis<16,1,1,1>> &output_feature_map
 );
 
 #endif
