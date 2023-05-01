@@ -141,7 +141,7 @@ void store_output_tile_to_DRAM (
     const int height_offset = ti * OUT_BUF_HEIGHT;
     const int width_offset  = tj * OUT_BUF_WIDTH;
 
-    ap_axis<16,1,1,1> tmp;
+    
 
     OUTPUT_BUFFER_DEPTH:
     for(int f = 0; f < OUT_BUF_DEPTH; f++)
@@ -155,19 +155,23 @@ void store_output_tile_to_DRAM (
                 // ReLU in-place
                 if(out_fm_buf[f][i][j] < (fm_t) 0)
                 {
+                    ap_axis<16,1,1,1> tmp;
                     tmp.data = 0;
                     tmp.last = 0;
                     tmp.user = 0;
                     tmp.id = 0;
-                    out_fm << tmp;
+                    out_fm.write(tmp);
                 }
                 else
                 {
+                    ap_axis<16,1,1,1> tmp;
                     tmp.data = out_fm_buf[f][i][j];
+                    // std::cout << "writing " <<out_fm_buf[f][i][j] << " becomes ";
+                    // std::cout << tmp.data << std::endl;
                     tmp.last = 0;
                     tmp.user = 0;
                     tmp.id = 0;
-                    out_fm << tmp;
+                    out_fm.write(tmp);
                 }
                 out_fm_buf[f][i][j]=0;
             }

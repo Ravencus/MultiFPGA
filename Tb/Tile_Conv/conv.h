@@ -22,11 +22,11 @@
 // Type conversions for simulation and synthesis
 //--------------------------------------------------------------------------
 #ifdef  CSIM_DEBUG
-    typedef float fm_t;
-    typedef float wt_t;
+    typedef ap_fixed<16,3> fm_t;
+    typedef ap_fixed<16,3> wt_t;
 #else
-    typedef ap_int<16> fm_t;
-    typedef ap_int<16> wt_t;
+    typedef ap_fixed<16,3> fm_t;
+    typedef ap_fixed<16,3> wt_t;
 #endif
 
 //--------------------------------------------------------------------------
