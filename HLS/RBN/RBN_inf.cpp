@@ -1,8 +1,6 @@
 
 
-#define C 4     // channel
-#define W 23     // IFM_ width
-#define H 20    // IFM_ height
+
 
 #include <iostream>
 #include <ap_fixed.h>
@@ -10,16 +8,19 @@
 #include "ap_int.h"
 
 
-// #include "ap_axi_sdata.h"
+#include "ap_axi_sdata.h"
 typedef ap_fixed<16, 3> fm;
 
+#define C 4     // channel
+#define W 23     // IFM_ width
+#define H 20    // IFM_ height
 
 
 void RBN_inf(
 
-	fm op[C][H][W],
+	int op[C][H][W],
 	// fm x[C][H][W]
-	hls::stream<ap_fixed<16, 3>> &stream_in
+	hls::stream<ap_axis<16, 1,1,1>> &stream_in
 )
 {
 
@@ -57,15 +58,19 @@ void RBN_inf(
 	{
 		if (!stream_in.empty())
 		{
-			dataholder = stream_in.read();
-			 
+			ap_axis<16, 1,1,1> tmp = stream_in.read();
+			ap_int<16> raw = tmp.data;
+			for (int t = 0; t < 16; t++)
+			{
+				dataholder[t] = raw[t];
+			}
 			idx_W = stream_ct % W;
 			idx_H = stream_ct / W;
 			idx_C = stream_ct / (H*W);
 
 			local_tile[idx_C][idx_H][idx_W] = dataholder;
 
-
+			fm do_nothing;
 			stream_ct++;
 			if (stream_ct == C*H*W)
 			{
@@ -77,13 +82,14 @@ void RBN_inf(
 					{
 						for (int w = 0; w < W; w++)
 						{
-								op[c][h][w] = (local_tile[c][h][w] - mean[c]) / var[c] / CN * gamma[c] + beta[c];
+								do_nothing = (local_tile[c][h][w] - mean[c]) / var[c] / CN * gamma[c] + beta[c];
+								op[c][h][w] = tile_count;
 						}
 					}
 				}
 				tile_count+=1;
 				if (tile_count == 16*32*16){
-					return;
+					break;
 				}
 			}
 		}
@@ -93,24 +99,6 @@ void RBN_inf(
 		}
 			
 	}
-
-
-
-	
-
-	// for (int c = 0; c < C; c++)
-	// {
-	// 	for (int h = 0; h < H; h++)
-	// 	{
-	// 		for (int w = 0; w < W; w++)
-	// 		{
-	// 			op[c][h][w] = op_B[c][h][w];
-	// 		}
-
-	// 	}
-
-	// }
-
     return;
 }
 

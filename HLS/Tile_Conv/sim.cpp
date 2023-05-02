@@ -1,16 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-// Course:      ECE8893 - Parallel Programming for FPGAs
-// Filename:    sim.cpp
-// Description: Test bench for tiling-based convolution
-//
-// Note:        You are not required to turn in this code.
-//              In case you make any modifications (for debugging, etc.),
-//              do ensure your design works with the original test bench.
-//
-//              For debugging, you may use the PRINT_DEBUG construct.
-//              You can put your print statements inside this ifdef block and
-//              use "make debug".
-///////////////////////////////////////////////////////////////////////////////
+
 #include <iostream>
 #include <fstream>
 #include <cmath>
