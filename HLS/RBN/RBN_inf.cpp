@@ -1,13 +1,16 @@
-#include <math.h>
-#include<stdio.h>
+
 
 #define C 4     // channel
 #define W 23     // IFM_ width
 #define H 20    // IFM_ height
-#include<math.h>
-#include "ap_axi_sdata.h"
-#include "hls_stream.h"
+
+#include <iostream>
+#include <ap_fixed.h>
+#include <hls_stream.h>
 #include "ap_int.h"
+
+
+// #include "ap_axi_sdata.h"
 typedef ap_fixed<16, 3> fm;
 
 
@@ -20,7 +23,7 @@ void RBN_inf(
 )
 {
 
-#pragma HLS interface mode=axis port = stream_in  bundle=input
+#pragma HLS interface mode=axis port = stream_in 
 #pragma HLS interface mode=m_axi port = op  bundle=y_op
 #pragma HLS INTERFACE s_axilite register port=return
 
@@ -54,7 +57,7 @@ void RBN_inf(
 	{
 		if (!stream_in.empty())
 		{
-			dataholder = stream_in.read()
+			dataholder = stream_in.read();
 			 
 			idx_W = stream_ct % W;
 			idx_H = stream_ct / W;
